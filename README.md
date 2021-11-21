@@ -1,17 +1,22 @@
 # QETweaks
 
-A collection of small mods for Quake Enhanced
+A collection of "tweaks" (small mods) for Quake Enhanced.
 
-## How to enable tweaks
+## Enabling tweaks
 
-Set "saved2" console variable before starting a server
+Set `saved2` console variable to desired value before starting a server. If you want to change the value, restart the map.
 
-1 = Axe does 100 damage
-2 = Map `start` (Introduction) floor open
+## Tweak values
 
-To enable multiple tweaks, simply add together the ones you want to enable
-for example `saved2 3` before starting a server will enable both 100-damage 
-axe and the floor of `start` being open.
+You can activate multiple tweaks by adding the values together. (eg: 1+2 = 3)
+
+### 1: Axe does 100 damage
+
+Just like it sounds. The axe does 100 damage.
+
+### 2: Map `start` (Introduction) floor open
+
+The floor/stairs that would normally open after collecting all 4 runes (before the boss level) will be open on `start`.
 
 ## Credits/Acknowledgements
 
@@ -23,4 +28,4 @@ Thanks to:
   [QE community Discord](https://discord.qethings.xyz/)
 
 Be sure to check out the
-[QE Things Multiplayer mods page](https://mpmods.qethings.xyz/)
+[QE Things Multiplayer mods page](https://mpmods.qethings.xyz/)!
