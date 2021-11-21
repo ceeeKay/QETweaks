@@ -514,6 +514,11 @@ This is just a solid wall if not inhibitted
 */
 void() func_wall =
 {
+	if (GetQETweaks() & QETWEAK_MAP_START_OPEN)
+	{
+		if (mapname == "start" && self.model == "*47") remove(self);
+	}
+
 	self.classname = "func_wall";
 	self.angles = '0 0 0';
 	self.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
@@ -558,6 +563,11 @@ This bmodel appears unless players have all of the episode sigils.
 void() func_bossgate =
 
 {
+	if (GetQETweaks() & QETWEAK_MAP_START_OPEN)
+	{
+		if (mapname == "start" && self.model == "*38") remove(self);
+	}
+
 	if ( (serverflags & 15) == 15)
 		return;		// all episodes completed
 	self.angles = '0 0 0';
