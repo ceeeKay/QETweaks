@@ -176,12 +176,37 @@ void() worldspawn =
 	lastspawn = world;
 	InitBodyQue ();
 
+	// Load server cvar for tweaks
+	QETweaksInit();
+
 // custom map attributes
 	if (self.model == "maps/e1m8.bsp")
 		cvar_set ("sv_gravity", "100");
 	else
 		cvar_set ("sv_gravity", "800");
 
+	if (self.model == "maps/dm1.bsp" && qetweaks & QETWEAK_MAP_DM1_UPGRADE)
+	{
+		// Red armor behind gate
+		local entity ent = spawn();
+		ent.origin = '320 1600 -120';
+		ent.impulse = 1;
+		ent.classname = "item_armorInv";
+		local entity oself = self;
+		self = ent;
+		item_armorInv();
+		self = oself;
+
+		// Quad on tapestry
+		ent = spawn();
+		ent.origin = '-50 1145 216';
+		ent.impulse = 1;
+		ent.classname = "item_artifact_super_damage";
+		oself = self;
+		self = ent;
+		item_artifact_super_damage();
+		self = oself;
+	}
 
 // custom map title
 	self.message = GetMapName(self.message);
@@ -339,9 +364,6 @@ void() worldspawn =
 
 	// 63 testing
 	lightstyle(63, "a");
-
-	// Load server cvar for tweaks
-	QETweaksInit();
 };
 
 void() StartFrame =
