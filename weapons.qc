@@ -51,7 +51,14 @@ void() W_FireAxe =
 	{
 		trace_ent.axhitme = 1;
 		SpawnBlood (org, '0 0 0', 20);
-		T_Damage (trace_ent, self, self, 20);
+		if(GetQETweaks() & QETWEAK_AXE_100_DAMAGE)
+		{
+			T_Damage (trace_ent, self, self, 100);
+		}
+		else
+		{
+			T_Damage (trace_ent, self, self, 20);
+		}
 	}
 	else
 	{	// hit wall

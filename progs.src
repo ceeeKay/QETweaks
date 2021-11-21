@@ -3,6 +3,7 @@ build/progs.dat
 defs.qc
 subs.qc
 maps.qc
+qetweaks.qc
 fight.qc
 ai.qc
 combat.qc
