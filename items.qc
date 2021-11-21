@@ -405,7 +405,7 @@ void() weapon_touch =
 	else
 		leave = 0;
 
-	if (mapname == "dm1" && GetQETweaks() & QETWEAK_MAP_DM1_UPGRADE)
+	if (mapname == "dm1" && qetweaks & QETWEAK_MAP_DM1_UPGRADE)
 		{
 		// Replace weapon pickup
 		if (self.classname == "weapon_nailgun")
@@ -518,7 +518,7 @@ void weapon_rocketlauncher();
 
 void() weapon_supershotgun =
 {
-	if (mapname == "dm1" && GetQETweaks() & QETWEAK_MAP_DM1_UPGRADE)
+	if (mapname == "dm1" && qetweaks & QETWEAK_MAP_DM1_UPGRADE)
 	{
 		// Replace item model
 		weapon_lightning();
@@ -539,7 +539,7 @@ void() weapon_supershotgun =
 
 void() weapon_nailgun =
 {
-	if (mapname == "dm1" && GetQETweaks() & QETWEAK_MAP_DM1_UPGRADE)
+	if (mapname == "dm1" && qetweaks & QETWEAK_MAP_DM1_UPGRADE)
 	{
 		// Replace item model
 		weapon_rocketlauncher();
@@ -720,7 +720,7 @@ float WEAPON_BIG2 = 1;
 
 void() item_shells =
 {
-	if (mapname == "dm1" && GetQETweaks() & QETWEAK_MAP_DM1_UPGRADE)
+	if (mapname == "dm1" && qetweaks & QETWEAK_MAP_DM1_UPGRADE)
 	{
 		// Replace item model
 		item_cells();
@@ -752,7 +752,7 @@ void() item_shells =
 
 void() item_spikes =
 {
-	if (mapname == "dm1" && GetQETweaks() & QETWEAK_MAP_DM1_UPGRADE)
+	if (mapname == "dm1" && qetweaks & QETWEAK_MAP_DM1_UPGRADE)
 	{
 		// Replace item model
 		item_rockets();

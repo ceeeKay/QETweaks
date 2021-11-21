@@ -339,6 +339,9 @@ void() worldspawn =
 
 	// 63 testing
 	lightstyle(63, "a");
+
+	// Load server cvar for tweaks
+	QETweaksInit();
 };
 
 void() StartFrame =

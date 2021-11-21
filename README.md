@@ -4,7 +4,7 @@ A collection of "tweaks" (small mods) for Quake Enhanced.
 
 ## Enabling tweaks
 
-Set `saved2` console variable to desired value before starting a server. If you want to change the value, restart the map.
+Set `saved1` console variable to desired value before starting a server. If you want to change the value, restart the map.
 
 ## Tweak values
 
