@@ -924,7 +924,7 @@ void() PlayerPreThink =
 	{
 		self.cnt |= PEF_SEEN_MESSAGE;
 
-		centerprint(self,"Welcome to QETweaks\n\nAny bugs are probably related to the mod\nTweaks: ",ftos(GetQETweaks()),"\n\nHave fun!");
+		QETweaksWelcome();
 	}
 
 	makevectors (self.v_angle);		// is this still used
