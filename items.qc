@@ -405,6 +405,19 @@ void() weapon_touch =
 	else
 		leave = 0;
 
+	if (mapname == "dm1" && GetQETweaks() & QETWEAK_MAP_DM1_UPGRADE)
+		{
+		// Replace weapon pickup
+		if (self.classname == "weapon_nailgun")
+		{
+			self.classname = "weapon_rocketlauncher";
+		}
+		else if (self.classname == "weapon_supershotgun")
+		{
+			self.classname = "weapon_lightning";
+		}
+	}
+
 	if (self.classname == "weapon_nailgun")
 	{
 		if (leave && (other.items & IT_NAILGUN) )
@@ -496,11 +509,22 @@ void() weapon_touch =
 };
 
 
+// Forward declarations for QETWEAK_MAP_DM1_UPGRADE
+void weapon_lightning();
+void weapon_rocketlauncher();
+
 /*QUAKED weapon_supershotgun (0 .5 .8) (-16 -16 0) (16 16 32)
 */
 
 void() weapon_supershotgun =
 {
+	if (mapname == "dm1" && GetQETweaks() & QETWEAK_MAP_DM1_UPGRADE)
+	{
+		// Replace item model
+		weapon_lightning();
+		return;
+	}
+
 	precache_model ("progs/g_shot.mdl");
 	setmodel (self, "progs/g_shot.mdl");
 	self.weapon = IT_SUPER_SHOTGUN;
@@ -515,6 +539,13 @@ void() weapon_supershotgun =
 
 void() weapon_nailgun =
 {
+	if (mapname == "dm1" && GetQETweaks() & QETWEAK_MAP_DM1_UPGRADE)
+	{
+		// Replace item model
+		weapon_rocketlauncher();
+		return;
+	}
+
 	precache_model ("progs/g_nail.mdl");
 	setmodel (self, "progs/g_nail.mdl");
 	self.weapon = IT_NAILGUN;
@@ -677,6 +708,9 @@ local float		best;
 };
 
 
+// Forward declarations for QETWEAK_MAP_DM1_UPGRADE
+void item_cells();
+void item_rockets();
 
 
 float WEAPON_BIG2 = 1;
@@ -686,6 +720,13 @@ float WEAPON_BIG2 = 1;
 
 void() item_shells =
 {
+	if (mapname == "dm1" && GetQETweaks() & QETWEAK_MAP_DM1_UPGRADE)
+	{
+		// Replace item model
+		item_cells();
+		return;
+	}
+
 	self.touch = ammo_touch;
 
 	if (self.spawnflags & WEAPON_BIG2)
@@ -711,6 +752,13 @@ void() item_shells =
 
 void() item_spikes =
 {
+	if (mapname == "dm1" && GetQETweaks() & QETWEAK_MAP_DM1_UPGRADE)
+	{
+		// Replace item model
+		item_rockets();
+		return;
+	}
+
 	self.touch = ammo_touch;
 
 	if (self.spawnflags & WEAPON_BIG2)
