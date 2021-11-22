@@ -25,12 +25,17 @@ The floor/stairs that would normally open after collecting all 4 runes
 The nailguns are replaced with rocket launchers and the super shotgun is
 replaced with a lightning on `dm1`. Appropriate ammo is also replaced.
 
+### 8: Double-jump enabled
+
+You can double-jump.
+
 ## Credits/Acknowledgements
 
 Thanks to:
 
 * [JPiolho](https://github.com/jpiolho) for all the advice, help, and code.
 * Dan The Man for the `start` map door code.
+* teamred for the double-jump mod.
 * All the great folks in the
   [QE community Discord](https://discord.qethings.xyz/)
 

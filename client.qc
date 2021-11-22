@@ -735,6 +735,17 @@ void() PlayerDeathThink =
 	respawn();
 };
 
+void(vector pos) rndJumpVFX =
+{
+	local float rndx, rndy;
+	rndx = pos_x + (random() - 0.5) * 40;
+	rndy = pos_y + (random() - 0.5) * 40;
+	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte (MSG_BROADCAST, TE_KNIGHTSPIKE);
+	WriteCoord (MSG_BROADCAST, rndx);
+	WriteCoord (MSG_BROADCAST, rndy);
+	WriteCoord (MSG_BROADCAST, pos_z);
+}
 
 void() PlayerJump =
 {
@@ -764,20 +775,73 @@ void() PlayerJump =
 		return;
 	}
 
-	if (!(self.flags & FL_ONGROUND))
-		return;
+	if (!(qetweaks & QETWEAK_DOUBLE_JUMP))
+	{
+		// Normal (non-double-jump mod) behavior
+		if (!(self.flags & FL_ONGROUND))
+			return;
+	}
 
 	if ( !(self.flags & FL_JUMPRELEASED) )
 		return;		// don't pogo stick
 
 	self.flags = self.flags - (self.flags & FL_JUMPRELEASED);
 
-	self.flags = self.flags - FL_ONGROUND;	// don't stairwalk
+	if (!(qetweaks & QETWEAK_DOUBLE_JUMP))
+	{
+		// Normal (non-double-jump mod) behavior
+		self.flags = self.flags - FL_ONGROUND;	// don't stairwalk
+	}
+	else
+	{
+		if (self.flags & FL_ONGROUND)
+		{
+			self.flags = self.flags - FL_ONGROUND;	// don't stairwalk
+
+			if (self.flags & FL_JUMP1)
+			{
+				self.flags = self.flags - FL_JUMP1;
+			}
+			if (self.flags & FL_JUMP2)
+			{
+				self.flags = self.flags - FL_JUMP2;
+			}
+		}
+
+		// using the global flags to hold whether the player is jumping the
+		// first or second time
+		if (!(self.flags & FL_JUMP1))
+		{
+			self.flags = self.flags | FL_JUMP1;
+			self.velocity_z = self.velocity_z + 270;
+		}
+		else if (!(self.flags & FL_JUMP2))
+		{
+			self.flags = self.flags | FL_JUMP2;
+			self.velocity_z = self.velocity_z + 270;
+			//make a special fx shower
+			rndJumpVFX(self.origin);
+			rndJumpVFX(self.origin);
+			rndJumpVFX(self.origin);
+			rndJumpVFX(self.origin);
+			rndJumpVFX(self.origin);
+			rndJumpVFX(self.origin);
+		}
+		else
+		{
+			return;
+		}
+	}
 
 	self.button2 = 0;
 // player jumping sound
 	sound (self, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM);
-	self.velocity_z = self.velocity_z + 270;
+
+	if (!(qetweaks & QETWEAK_DOUBLE_JUMP))
+	{
+		// Normal (non-double-jump mod) behavior
+		self.velocity_z = self.velocity_z + 270;
+	}
 };
 
 
