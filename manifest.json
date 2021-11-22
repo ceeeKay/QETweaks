@@ -1,0 +1,12 @@
+{
+	"manifestVersion": 1,
+	"name": "QETweaks",
+	"version": "0.5",
+	"author": "CK",
+	"date": "22/11/2021",
+	"description": "Provides various small modifications (tweaks) controlled via the saved1 server cvar.\nYou can activate multiple tweaks by adding the values together (eg 1 + 2 = 3).\n1: Axe does 100 damage\n2: Map start (Introduction) floor open\n4: Map dm1 (Place of Two Deaths) weapons upgraded\n8: Double-jump enabled",
+	"gamedir": "id1",
+	"download": "qetweaks_v0.5.zip",
+	"screenshots": [],
+	"pak": "pak0.pak"
+}
