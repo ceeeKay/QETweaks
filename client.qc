@@ -813,12 +813,12 @@ void() PlayerJump =
 		if (!(self.flags & FL_JUMP1))
 		{
 			self.flags = self.flags | FL_JUMP1;
-			self.velocity_z = self.velocity_z + 270;
+			self.velocity_z = self.velocity_z + 280;
 		}
 		else if (!(self.flags & FL_JUMP2))
 		{
 			self.flags = self.flags | FL_JUMP2;
-			self.velocity_z = self.velocity_z + 270;
+			self.velocity_z = self.velocity_z + 280;
 			//make a special fx shower
 			rndJumpVFX(self.origin);
 			rndJumpVFX(self.origin);
