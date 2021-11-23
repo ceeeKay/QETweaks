@@ -272,6 +272,7 @@ void() worldspawn =
 	precache_sound ("weapons/ax1.wav");			// ax swoosh
 	precache_sound ("player/axhit1.wav");		// ax hit meat
 	precache_sound ("player/axhit2.wav");		// ax hit world
+	precache_sound ("hknight/hit.wav");			// for QETWEAK_GRAPPLING_HOOK hook launch
 
 	precache_sound ("player/h2ojump.wav");		// player jumping into water
 	precache_sound ("player/slimbrn2.wav");		// player enter slime
@@ -312,6 +313,8 @@ void() worldspawn =
 	precache_model ("progs/grenade.mdl");
 	precache_model ("progs/spike.mdl");
 	precache_model ("progs/s_spike.mdl");
+
+	precache_model ("progs/v_spike.mdl"); // For QETWEAK_GRAPPLING_HOOK
 
 	precache_model ("progs/backpack.mdl");
 

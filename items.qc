@@ -372,6 +372,11 @@ void(float old, float new) Deathmatch_Weapon =
 	local float or, nr;
 
 // change self.weapon if desired
+	if (qetweaks & QETWEAK_GRAPPLING_HOOK)
+	{
+		if (self.weapon == IT_HOOK && self.button0)
+		return; // never change if we pulled ourselves to it.
+	}
 	or = RankForWeapon (self.weapon);
 	nr = RankForWeapon (new);
 	if ( nr < or )
@@ -1380,6 +1385,9 @@ void() DropBackpack =
 	item.items = self.weapon;
 	if (item.items == IT_AXE)
 		item.netname = "Axe";
+	else if (qetweaks & QETWEAK_GRAPPLING_HOOK && item.items == IT_HOOK)
+		// Original 3wctf doesn't put hook in backpack
+		item.netname = "Grappling Hook";
 	else if (item.items == IT_SHOTGUN)
 		item.netname = "Shotgun";
 	else if (item.items == IT_SUPER_SHOTGUN)

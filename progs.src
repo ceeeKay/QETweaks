@@ -18,6 +18,7 @@ buttons.qc
 triggers.qc
 plats.qc
 misc.qc
+hook.qc
 
 ogre.qc
 demon.qc

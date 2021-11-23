@@ -1,6 +1,6 @@
 # QETweaks
 
-A collection of "tweaks" (small mods) for Quake Enhanced.
+A collection of "tweaks" (small mods) for Quake Enhanced multiplayer servers.
 
 ## Enabling tweaks
 
@@ -29,6 +29,12 @@ replaced with a lightning on `dm1`. Appropriate ammo is also replaced.
 
 You can double-jump.
 
+### 16: Grappling hook enabled
+
+The beloved grappling hook (aka morning star) from Threewave CTF.
+Press '1' to cycle between axe and grapple, or bind a key to "impulse 22" to
+switch straight to grapple.
+
 ## Credits/Acknowledgements
 
 Thanks to:
@@ -36,6 +42,7 @@ Thanks to:
 * [JPiolho](https://github.com/jpiolho) for all the advice, help, and code.
 * Dan The Man for the `start` map door code.
 * teamred for the double-jump mod.
+* Dave "Zoid" Kirsch and "Mike" for grappling hook/morning star.
 * All the great folks in the
   [QE community Discord](https://discord.qethings.xyz/)
 

@@ -769,6 +769,12 @@ void() W_SetCurrentAmmo =
 		self.weaponmodel = "progs/v_axe.mdl";
 		self.weaponframe = 0;
 	}
+	else if (qetweaks & QETWEAK_GRAPPLING_HOOK && self.weapon == IT_HOOK)
+	{
+		self.currentammo = 0;
+		self.weaponmodel = "progs/v_axe.mdl";
+		self.weaponframe = 0;
+	}
 	else if (self.weapon == IT_SHOTGUN)
 	{
 		self.currentammo = self.ammo_shells;
@@ -850,7 +856,7 @@ float() W_CheckNoAmmo =
 	if (self.currentammo > 0)
 		return TRUE;
 
-	if (self.weapon == IT_AXE)
+	if (self.weapon == IT_AXE || (qetweaks & QETWEAK_GRAPPLING_HOOK && self.weapon == IT_HOOK))
 		return TRUE;
 
 	self.weapon = W_BestWeapon ();
@@ -876,6 +882,9 @@ void()	player_shot1;
 void()	player_nail1;
 void()	player_light1;
 void()	player_rocket1;
+// For QETWEAK_GRAPPLING_HOOK
+void()	player_chain1;
+void()  player_chain3;
 
 void() W_Attack =
 {
@@ -900,6 +909,14 @@ void() W_Attack =
 		else
 			player_axed1 ();
 		self.attack_finished = time + 0.5;
+	}
+	else if (qetweaks & QETWEAK_GRAPPLING_HOOK && self.weapon == IT_HOOK)
+	{
+		if (!self.hook_out)
+			player_chain1();
+		else
+			player_chain3();
+		self.attack_finished = time + 0.1;
 	}
 	else if (self.weapon == IT_SHOTGUN)
 	{
@@ -941,6 +958,14 @@ void() W_Attack =
 	}
 };
 
+void() NotifyWeapon =
+{
+	if (self.weapon == IT_AXE)
+		sprint(self, "Axe selected.\n");
+	else if (qetweaks & QETWEAK_GRAPPLING_HOOK && self.weapon == IT_HOOK)
+		sprint(self, "Grappling hook selected.\n");
+};
+
 /*
 ============
 W_ChangeWeapon
@@ -956,7 +981,10 @@ void() W_ChangeWeapon =
 
 	if (self.impulse == 1)
 	{
-		fl = IT_AXE;
+		if (qetweaks & QETWEAK_GRAPPLING_HOOK && self.weapon == IT_AXE)
+			fl = IT_HOOK;
+		else
+			fl = IT_AXE;
 	}
 	else if (self.impulse == 2)
 	{
@@ -1000,6 +1028,10 @@ void() W_ChangeWeapon =
 		if (self.ammo_cells < 1)
 			am = 1;
 	}
+	else if (qetweaks & QETWEAK_GRAPPLING_HOOK && self.impulse == 22)
+	{
+		fl = IT_HOOK;
+	}
 
 	self.impulse = 0;
 
@@ -1019,6 +1051,10 @@ void() W_ChangeWeapon =
 // set weapon, set ammo
 //
 	self.weapon = fl;
+	if (qetweaks & QETWEAK_GRAPPLING_HOOK)
+	{
+		NotifyWeapon();
+	}
 	W_SetCurrentAmmo ();
 };
 
@@ -1035,15 +1071,30 @@ void() CheatCommand =
 	self.ammo_rockets = 100;
 	self.ammo_nails = 200;
 	self.ammo_shells = 100;
-	self.items = self.items |
-		IT_AXE |
-		IT_SHOTGUN |
-		IT_SUPER_SHOTGUN |
-		IT_NAILGUN |
-		IT_SUPER_NAILGUN |
-		IT_GRENADE_LAUNCHER |
-		IT_ROCKET_LAUNCHER |
-		IT_KEY1 | IT_KEY2;
+	if (qetweaks & QETWEAK_GRAPPLING_HOOK) {
+		self.items = self.items |
+			IT_AXE |
+			IT_HOOK |
+			IT_SHOTGUN |
+			IT_SUPER_SHOTGUN |
+			IT_NAILGUN |
+			IT_SUPER_NAILGUN |
+			IT_GRENADE_LAUNCHER |
+			IT_ROCKET_LAUNCHER |
+			IT_KEY1 | IT_KEY2;
+	}
+	else
+	{
+		self.items = self.items |
+			IT_AXE |
+			IT_SHOTGUN |
+			IT_SUPER_SHOTGUN |
+			IT_NAILGUN |
+			IT_SUPER_NAILGUN |
+			IT_GRENADE_LAUNCHER |
+			IT_ROCKET_LAUNCHER |
+			IT_KEY1 | IT_KEY2;
+	}
 
 	self.ammo_cells = 200;
 	self.items = self.items | IT_LIGHTNING;
@@ -1076,6 +1127,19 @@ void() CycleWeaponCommand =
 			self.weapon = IT_AXE;
 		}
 		else if (self.weapon == IT_AXE)
+		{
+			if (qetweaks & QETWEAK_GRAPPLING_HOOK)
+			{
+				self.weapon = IT_HOOK;
+			}
+			else
+			{
+				self.weapon = IT_SHOTGUN;
+				if (self.ammo_shells < 1)
+					am = 1;
+			}
+		}
+		else if (qetweaks & QETWEAK_GRAPPLING_HOOK && self.weapon == IT_HOOK)
 		{
 			self.weapon = IT_SHOTGUN;
 			if (self.ammo_shells < 1)
@@ -1183,6 +1247,17 @@ void() CycleWeaponReverseCommand =
 		}
 		else if (self.weapon == IT_SHOTGUN)
 		{
+			if (qetweaks & QETWEAK_GRAPPLING_HOOK)
+			{
+				self.weapon = IT_HOOK;
+			}
+			else
+			{
+				self.weapon = IT_AXE;
+			}
+		}
+		else if (qetweaks & QETWEAK_GRAPPLING_HOOK && self.weapon == IT_HOOK)
+		{
 			self.weapon = IT_AXE;
 		}
 		else if (self.weapon == IT_AXE)
@@ -1231,7 +1306,7 @@ ImpulseCommands
 */
 void() ImpulseCommands =
 {
-	if (self.impulse >= 1 && self.impulse <= 8)
+	if (self.impulse >= 1 && self.impulse <= 8 || (qetweaks & QETWEAK_GRAPPLING_HOOK && self.impulse == 22))
 		W_ChangeWeapon ();
 
 	if (self.impulse == 9)

@@ -6,6 +6,8 @@ void() player_pain;
 void() player_stand1;
 void (vector org) spawn_tfog;
 void (vector org, entity death_owner) spawn_tdeath;
+// For QETWEAK_GRAPPLING_HOOK
+void() UnHookPlayer;
 
 float	modelindex_eyes, modelindex_player;
 
@@ -76,7 +78,13 @@ void() SetChangeParms =
 
 void() SetNewParms =
 {
-	parm1 = IT_SHOTGUN | IT_AXE;
+	if (qetweaks & QETWEAK_GRAPPLING_HOOK){
+		parm1 = IT_SHOTGUN | IT_AXE | IT_HOOK;
+	}
+	else
+	{
+		parm1 = IT_SHOTGUN | IT_AXE;
+	}
 	parm2 = GetMaxHealth();
 	parm3 = 0;
 	parm4 = 25;
@@ -399,6 +407,10 @@ void() ClientKill =
 {
 	bprint (self.netname);
 	bprint (" suicides\n");
+	if (qetweaks & QETWEAK_GRAPPLING_HOOK)
+	{
+		UnHookPlayer();
+	}
 	set_suicide_frame ();
 	self.modelindex = modelindex_player;
 	self.frags = self.frags - 2;	// extra penalty
@@ -1019,10 +1031,20 @@ void() PlayerPreThink =
 	if (time < self.pausetime)
 		self.velocity = '0 0 0';
 
-	if(time > self.attack_finished && self.currentammo == 0 && self.weapon != IT_AXE)
+	if (qetweaks & QETWEAK_GRAPPLING_HOOK) {
+		if(time > self.attack_finished && self.currentammo == 0 && self.weapon != IT_AXE && self.weapon != IT_HOOK)
+		{
+			self.weapon = W_BestWeapon ();
+			W_SetCurrentAmmo ();
+		}
+	}
+	else
 	{
-		self.weapon = W_BestWeapon ();
-		W_SetCurrentAmmo ();
+		if(time > self.attack_finished && self.currentammo == 0 && self.weapon != IT_AXE)
+		{
+			self.weapon = W_BestWeapon ();
+			W_SetCurrentAmmo ();
+		}
 	}
 };
 
@@ -1345,6 +1367,16 @@ void(entity targ, entity attacker) ClientObituary =
 				{
 					deathstring = " was ax-murdered by ";
 					deathstring2 = "\n";
+				}
+				if (qetweaks & QETWEAK_GRAPPLING_HOOK)
+				{
+					if (rnum == IT_HOOK) {
+						if (random() < 0.5)
+							deathstring = " was disembowled by ";
+						else
+							deathstring = " was hooked by ";
+						deathstring2 = "\n";
+					}
 				}
 				if (rnum == IT_SHOTGUN)
 				{

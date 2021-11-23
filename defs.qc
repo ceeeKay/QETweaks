@@ -317,6 +317,9 @@ float	IT_INVULNERABILITY		= 1048576;
 float	IT_SUIT					= 2097152;
 float	IT_QUAD					= 4194304;
 
+// For QETWEAK_GRAPPLING_HOOK
+float	IT_HOOK					= 8388608;
+
 // point content values
 
 float	CONTENT_EMPTY			= -1;
@@ -472,6 +475,9 @@ float	AS_MISSILE		= 4;
 
 .float 		attack_finished;
 .float		pain_finished;
+
+// For QETWEAK_GRAPPLING_HOOK
+.float		hook_out;
 
 .float		invincible_finished;
 .float		invisible_finished;
