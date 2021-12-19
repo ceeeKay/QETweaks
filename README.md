@@ -35,6 +35,10 @@ The beloved grappling hook (aka morning star) from Threewave CTF.
 Press '1' to cycle between axe and grapple, or bind a key to "impulse 22" to
 switch straight to grapple.
 
+### 32: Game timer enabled
+
+Track how much time has passed since the start of the current round.
+
 ## Credits/Acknowledgements
 
 Thanks to:
