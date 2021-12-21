@@ -1004,7 +1004,7 @@ void() PlayerPreThink =
 	}
 
 	if (qetweaks & QETWEAK_GAME_TIMER) {
-		QETweaksGameTimerRun();
+		QETweaksGameTimerRun(self);
 	}
 
 	makevectors (self.v_angle);		// is this still used

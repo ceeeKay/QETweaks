@@ -15,7 +15,7 @@ string QETWEAK_S_MAP_START_OPEN  = "2: start map stairs open\n";
 string QETWEAK_S_MAP_DM1_UPGRADE = "4: dm1 map weapons upgraded\n";
 string QETWEAK_S_DOUBLE_JUMP     = "8: Double-jump\n";
 string QETWEAK_S_GRAPPLING_HOOK  = "16: Grappling hook\n";
-string QETWEAK_S_GAME_TIMER      = "32: Game timer\n";
+string QETWEAK_S_GAME_TIMER      = "32: Game timer abd ammo counts\n";
 
 // 3 of 3: Add to welcome message
 void() QETweaksWelcome = {
@@ -69,7 +69,7 @@ void() QETweaksInit = {
 }
 
 // Run function for game timer
-void QETweaksGameTimerRun() =
+void QETweaksGameTimerRun(entity client) =
 {
     // Let the welcome message print
 	if (time < 5)
@@ -92,20 +92,41 @@ void QETweaksGameTimerRun() =
     local float cur_min = floor(cur_time / 60);
 
 	// centerprint can do 7 strings, 40 lines, 50 characters wide
+
+    msg_entity = client;
+    WriteByte (MSG_ONE, SVC_CENTERPRINT);
+
+    // 1 base(?) + 1 format string + 7 format parameters
+    WriteShort (MSG_ONE, 9); // QE reserved
+
+    // Print 16 newlines to push "hud" to bottom of screen
+    local float i;
+    for(i = 0; i < 16; i = i + 1)
+    {
+        WriteByte (MSG_ONE, '\n');
+    }
+
+    // Write format string
+    WriteString(MSG_ONE, "{}:{}{}  s {}   n {}   r {}   c {}\n");
+
+    WriteString(MSG_ONE, ftos(cur_min));
     if (cur_sec < 10)
     {
-        // Special case for X:01-X:09 to print leading zero on seconds
-        centerprint(self,
-                    "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-                    ftos(cur_min), ":0", ftos(cur_sec)
-                    );
+        // Leading zero on seconds
+        WriteString(MSG_ONE, "0");
     }
     else
     {
-        // Normal print
-        centerprint(self,
-                    "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-                    ftos(cur_min), ":", ftos(cur_sec)
-                    );
+        WriteString(MSG_ONE, "");
     }
+    WriteString(MSG_ONE, ftos(cur_sec));
+
+    WriteString(MSG_ONE, ftos(client.ammo_shells));
+    WriteString(MSG_ONE, ftos(client.ammo_nails));
+    WriteString(MSG_ONE, ftos(client.ammo_rockets));
+    WriteString(MSG_ONE, ftos(client.ammo_cells));
+
+    // Everything after the format string parameters gets eaten
+
+    WriteByte (MSG_ONE, 0);
 }
