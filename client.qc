@@ -1003,10 +1003,6 @@ void() PlayerPreThink =
 		QETweaksWelcome();
 	}
 
-	if (qetweaks & QETWEAK_GAME_TIMER) {
-		QETweaksGameTimerRun(self);
-	}
-
 	makevectors (self.v_angle);		// is this still used
 
 	CheckRules ();
@@ -1222,6 +1218,10 @@ void() PlayerPostThink =
 		return;		// intermission or finale
 	if (self.deadflag)
 		return;
+
+	if (qetweaks & QETWEAK_PLAYER_HUD) {
+		QETweaksHudUpdate();
+	}
 
 // do weapon stuff
 

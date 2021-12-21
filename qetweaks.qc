@@ -7,7 +7,7 @@ float QETWEAK_MAP_START_OPEN  = 2;
 float QETWEAK_MAP_DM1_UPGRADE = 4;
 float QETWEAK_DOUBLE_JUMP     = 8;
 float QETWEAK_GRAPPLING_HOOK  = 16;
-float QETWEAK_GAME_TIMER      = 32;
+float QETWEAK_PLAYER_HUD      = 32;
 
 // 2 of 3: Add string description
 string QETWEAK_S_AXE_100_DAMAGE  = "1: Axe does 100 damage\n";
@@ -15,7 +15,7 @@ string QETWEAK_S_MAP_START_OPEN  = "2: start map stairs open\n";
 string QETWEAK_S_MAP_DM1_UPGRADE = "4: dm1 map weapons upgraded\n";
 string QETWEAK_S_DOUBLE_JUMP     = "8: Double-jump\n";
 string QETWEAK_S_GRAPPLING_HOOK  = "16: Grappling hook\n";
-string QETWEAK_S_GAME_TIMER      = "32: Game timer abd ammo counts\n";
+string QETWEAK_S_PLAYER_HUD      = "32: Player HUD with game timer, score, and ammo counts\n";
 
 // 3 of 3: Add to welcome message
 void() QETweaksWelcome = {
@@ -27,6 +27,7 @@ void() QETweaksWelcome = {
         "\n"
         "Have fun!");
 
+    sprint(self, "Enabled tweaks:\n");
     if (qetweaks & QETWEAK_AXE_100_DAMAGE)
     {
         sprint(self, QETWEAK_S_AXE_100_DAMAGE);
@@ -47,69 +48,157 @@ void() QETweaksWelcome = {
     {
         sprint(self, QETWEAK_S_GRAPPLING_HOOK);
     }
-    if (qetweaks & QETWEAK_GAME_TIMER)
+    if (qetweaks & QETWEAK_PLAYER_HUD)
     {
-        sprint(self, QETWEAK_S_GAME_TIMER);
+        sprint(self, QETWEAK_S_PLAYER_HUD);
+        if (cvar("scr_usekfont") == 1)
+        {
+            sprint(self, "  Recommend setting scr_usekfont 0\n");
+        }
     }
 }
-
-// For QETWEAK_GAME_TIMER
-float qetweaks_game_timer_last_tick;
 
 // Initialization
 void() QETweaksInit = {
 
     // Initialize from "saved1" CVAR
     qetweaks = cvar("saved1");
-
-    if (qetweaks & QETWEAK_GAME_TIMER)
-    {
-        qetweaks_game_timer_last_tick = 0;
-    }
 }
 
-// Run function for game timer
-void QETweaksGameTimerRun(entity client) =
+// Update player HUD with match timer, current score, weapon and ammo count info
+void QETweaksHudUpdate() =
 {
     // Let the welcome message print
 	if (time < 5)
 		return;
 
-    // Get current time as a whole (truncated) number
-    local float cur_time = floor(time);
-
-	// Only update once per second
-	if (cur_time <= (qetweaks_game_timer_last_tick))
+	// Only update after delay time has been reached
+	if (time < self.delay)
 	{
         return;
     }
 
-    // Store last tick
-    qetweaks_game_timer_last_tick = cur_time;
+    // Only update every 0.1 seconds
+    self.delay = time + 0.1;
 
     // Calculate time values for display
-    local float cur_sec = cur_time % 60;
-    local float cur_min = floor(cur_time / 60);
+    local float cur_sec;
+    local float cur_min;
 
-	// centerprint can do 7 strings, 40 lines, 50 characters wide
+    // Print different timer values based on what's interesting
+    if (cvar("timelimit") != 0)
+    {
+        cur_sec = floor(cvar("timelimit") * 60 - time) % 60;
+        cur_min = floor(floor(cvar("timelimit") * 60 - time) / 60);
+    }
+    else
+    {
+        cur_sec = floor(time) % 60;
+        cur_min = floor(floor(time) / 60);
+    }
 
-    msg_entity = client;
+	// Reminder: centerprint can do 7 strings, 40 lines, 50 characters wide
+    msg_entity = self;
     WriteByte (MSG_ONE, SVC_CENTERPRINT);
 
-    // 1 base(?) + 1 format string + 7 format parameters
-    WriteShort (MSG_ONE, 9); // QE reserved
+    // 1 base(?) + 1 format string + 21 format parameters
+    WriteShort (MSG_ONE, 23); // QE reserved
 
-    // Print 16 newlines to push "hud" to bottom of screen
+    // Print newlines to push hud to bottom of screen
+    local float newlines;
+    if (cvar("cl_hud") == 3) // Quake HUD full
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            newlines = 19;
+        }
+        else
+        {
+            newlines = 15;
+        }
+    }
+    else if (cvar("cl_hud") == 2) // Quake HUD standard
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            newlines = 20;
+        }
+        else
+        {
+            newlines = 16;
+        }
+    }
+    else if (cvar("cl_hud") == 0) // Quake HUD off
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            newlines = 21;
+        }
+        else
+        {
+            newlines = 17;
+        }
+    }
+    else // Quake HUD or minimal
+    {
+        newlines = 17;
+    }
     local float i;
-    for(i = 0; i < 16; i = i + 1)
+    for(i = 0; i < newlines; i = i + 1)
     {
         WriteByte (MSG_ONE, '\n');
     }
 
     // Write format string
-    WriteString(MSG_ONE, "{}:{}{}  s {}   n {}   r {}   c {}\n");
+    if (cvar("scr_usekfont") == 0)
+    {
+        WriteString(MSG_ONE,
+            // Timer
+            "\x10{}{}:{}{}\x11                                          \n"
+            // Frags, Cells
+            "\x10{}{}{}{}{}\x11                                   {}\x10{}{}\x11\n"
+            // Rockets
+            "                                           {}\x10{}{}\x11\n"
+            // Nails
+            "                                           {}\x10{}{}\x11\n"
+            // Shells
+            "                                           {}\x10{}{}\x11\n"
+        );
+    }
+    else
+    {
+        WriteString(MSG_ONE,
+            // Timer
+            "  {}{}:{}{}                                          \n"
+            // Frags, Cells
+            " {}{}{}{}{}                                 {} {}{} \n"
+            // Rockets
+            "                                        {} {}{} \n"
+            // Nails
+            "                                        {} {}{} \n"
+            // Shells
+            "                                        {} {}{} \n"
+        );
+    }
 
+    // Timer
+    // Padding
+    if (cur_min < 10)
+    {
+        WriteString(MSG_ONE, "  ");
+    }
+    else if (cur_min < 100)
+    {
+        WriteString(MSG_ONE, " ");
+    }
+    else // >= 100
+    {
+        WriteString(MSG_ONE, "");
+    }
+    // Minutes
     WriteString(MSG_ONE, ftos(cur_min));
+    // Seconds
+    // Padding
     if (cur_sec < 10)
     {
         // Leading zero on seconds
@@ -119,14 +208,234 @@ void QETweaksGameTimerRun(entity client) =
     {
         WriteString(MSG_ONE, "");
     }
+    // Value
     WriteString(MSG_ONE, ftos(cur_sec));
 
-    WriteString(MSG_ONE, ftos(client.ammo_shells));
-    WriteString(MSG_ONE, ftos(client.ammo_nails));
-    WriteString(MSG_ONE, ftos(client.ammo_rockets));
-    WriteString(MSG_ONE, ftos(client.ammo_cells));
+    // Frags/Score
+    // Spacing before score
+    WriteString(MSG_ONE, "");
+    WriteString(MSG_ONE, "");
+    WriteString(MSG_ONE, "   ");
+    // 3-digit score padding
+    if (self.frags < -9)
+    {
+        WriteString(MSG_ONE, "");
+    }
+    else if (self.frags < 0)
+    {
+        WriteString(MSG_ONE, " ");
+    }
+    else if (self.frags < 10)
+    {
+        WriteString(MSG_ONE, "  ");
+    }
+    else if (self.frags < 100)
+    {
+        WriteString(MSG_ONE, " ");
+    }
+    else // >= 100
+    {
+        WriteString(MSG_ONE, "");
+    }
+    // Value
+    WriteString(MSG_ONE, ftos(self.frags));
+
+    // LG, Cells
+    if (self.items & IT_LIGHTNING)
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            WriteString(MSG_ONE, " \sl"); // bronze l
+        }
+        else
+        {
+            WriteString(MSG_ONE, " l"); // white l
+        }
+    }
+    else
+    {
+        WriteString(MSG_ONE, "  ");
+    }
+    // Padding
+    if (self.ammo_cells < 10)
+    {
+        WriteString(MSG_ONE, "  ");
+    }
+    else if (self.ammo_cells < 100)
+    {
+        WriteString(MSG_ONE, " ");
+    }
+    else // >= 100
+    {
+        WriteString(MSG_ONE, "");
+    }
+    // Value
+    WriteString(MSG_ONE, ftos(self.ammo_cells));
+
+    // RL/GL, Rockets
+    if ((self.items & IT_GRENADE_LAUNCHER) && (self.items & IT_ROCKET_LAUNCHER))
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            WriteString(MSG_ONE, "\sgr"); // bronze gr
+        }
+        else
+        {
+            WriteString(MSG_ONE, "gr"); // white gr
+        }
+    }
+    else if (self.items & IT_GRENADE_LAUNCHER)
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            WriteString(MSG_ONE, " \sg"); // bronze g
+        }
+        else
+        {
+            WriteString(MSG_ONE, " g"); // white g
+        }
+    }
+    else if (self.items & IT_ROCKET_LAUNCHER)
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            WriteString(MSG_ONE, " \sr"); // bronze r
+        }
+        else
+        {
+            WriteString(MSG_ONE, " r"); // white r
+        }
+    }
+    else
+    {
+        WriteString(MSG_ONE, "  ");
+    }
+    // Padding
+    if (self.ammo_rockets < 10)
+    {
+        WriteString(MSG_ONE, "  ");
+    }
+    else if (self.ammo_rockets < 100)
+    {
+        WriteString(MSG_ONE, " ");
+    }
+    else // >= 100
+    {
+        WriteString(MSG_ONE, "");
+    }
+    // Value
+    WriteString(MSG_ONE, ftos(self.ammo_rockets));
+
+    // NG/SNG, Nails
+    if ((self.items & IT_NAILGUN) && (self.items & IT_SUPER_NAILGUN))
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            WriteString(MSG_ONE, "\sns"); // bronze ns
+        }
+        else
+        {
+            WriteString(MSG_ONE, "ns"); // white ns
+        }
+    }
+    else if (self.items & IT_NAILGUN)
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            WriteString(MSG_ONE, " \sn"); // bronze n
+        }
+        else
+        {
+            WriteString(MSG_ONE, " n"); //white n
+        }
+    }
+    else if (self.items & IT_SUPER_NAILGUN)
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            WriteString(MSG_ONE, " \ss"); // bronze s
+        }
+        else
+        {
+            WriteString(MSG_ONE, " s"); // white s
+        }
+    }
+    else
+    {
+        WriteString(MSG_ONE, "  ");
+    }
+    // Padding
+    if (self.ammo_nails < 10)
+    {
+        WriteString(MSG_ONE, "  ");
+    }
+    else if (self.ammo_nails < 100)
+    {
+        WriteString(MSG_ONE, " ");
+    }
+    else // >= 100
+    {
+        WriteString(MSG_ONE, "");
+    }
+    // Value
+    WriteString(MSG_ONE, ftos(self.ammo_nails));
+
+    // SG/SSG, Shells
+    if ((self.items & IT_SHOTGUN) && (self.items & IT_SUPER_SHOTGUN))
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            WriteString(MSG_ONE, "\sss"); // bronze ss
+        }
+        else
+        {
+            WriteString(MSG_ONE, "ss"); // white ss
+        }
+    }
+    else if (self.items & IT_SHOTGUN)
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            WriteString(MSG_ONE, " \ss"); //bronze s
+        }
+        else
+        {
+            WriteString(MSG_ONE, " s"); //white s
+        }
+    }
+    else if (self.items & IT_SUPER_SHOTGUN)
+    {
+        if (cvar("scr_usekfont") == 0)
+        {
+            WriteString(MSG_ONE, " \ss"); // bronze s
+        }
+        else
+        {
+            WriteString(MSG_ONE, " s"); // white s
+        }
+    }
+    else
+    {
+        WriteString(MSG_ONE, "  ");
+    }
+    // Padding
+    if (self.ammo_shells < 10)
+    {
+        WriteString(MSG_ONE, "  ");
+    }
+    else if (self.ammo_shells < 100)
+    {
+        WriteString(MSG_ONE, " ");
+    }
+    else // >= 100
+    {
+        WriteString(MSG_ONE, "");
+    }
+    // Value
+    WriteString(MSG_ONE, ftos(self.ammo_shells));
 
     // Everything after the format string parameters gets eaten
 
+    // Terminating null byte
     WriteByte (MSG_ONE, 0);
 }
