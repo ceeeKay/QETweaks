@@ -1,12 +1,12 @@
 {
 	"manifestVersion": 1,
 	"name": "QETweaks",
-	"version": "0.8",
+	"version": "0.9",
 	"author": "CK",
-	"date": "28/12/2021",
-	"description": "Provides various small modifications (tweaks) controlled via the saved1 server cvar.\nYou can activate multiple tweaks by adding the values together (eg 1 + 2 = 3).\n1: Axe does 100 damage\n2: Map start (Introduction) floor open\n4: Map dm1 (Place of Two Deaths) weapons upgraded\n8: Double-jump enabled\n16: Grappling hook enabled\n32: Player HUD enabled",
+	"date": "29/12/2021",
+	"description": "Provides various small modifications (tweaks) controlled via the saved1 server cvar.\nYou can activate multiple tweaks by adding the values together (eg 1 + 2 = 3).\n1: Axe does 100 damage\n2: Map start (Introduction) floor open\n4: Map dm1 (Place of Two Deaths) weapons upgraded\n8: Double-jump enabled\n16: Grappling hook enabled\n32: Player HUD enabled (mututually exclusive with Speedometer)\n64: Speedometer enabled (mututually exclusive with Player HUD)",
 	"gamedir": "id1",
-	"download": "qetweaks_v0.8.zip",
+	"download": "qetweaks_v0.9.zip",
 	"screenshots": [],
 	"pak": "pak0.pak"
 }

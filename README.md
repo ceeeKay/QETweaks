@@ -39,6 +39,12 @@ switch straight to grapple.
 
 Print a game timer, current score, and weapon+ammo info to the screen to
 compliment the minimal HUD. Set `scr_usekfont 0` for best-looking version.
+Note that this conflicts with drawing speedometer.
+
+### 64: Speedometer enabled
+
+Print a speedometer. Set `scr_usekfont 0` for best-looking version.
+Note that this conflicts with drawing Player HUD.
 
 ## Credits/Acknowledgements
 

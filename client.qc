@@ -1219,8 +1219,13 @@ void() PlayerPostThink =
 	if (self.deadflag)
 		return;
 
-	if (qetweaks & QETWEAK_PLAYER_HUD) {
+	if (qetweaks & QETWEAK_PLAYER_HUD)
+	{
 		QETweaksHudUpdate();
+	}
+	else if (qetweaks & QETWEAK_SPEEDOMETER)
+	{
+		QETweaksSpeedometerUpdate();
 	}
 
 // do weapon stuff
