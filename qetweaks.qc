@@ -2,7 +2,7 @@
 float qetweaks;
 
 // 1 of 3: Add flag definition
-float QETWEAK_AXE_100_DAMAGE  = 1;
+float QETWEAK_GGMOD           = 1;
 float QETWEAK_MAP_START_OPEN  = 2;
 float QETWEAK_MAP_DM1_UPGRADE = 4;
 float QETWEAK_DOUBLE_JUMP     = 8;
@@ -11,7 +11,7 @@ float QETWEAK_PLAYER_HUD      = 32;
 float QETWEAK_SPEEDOMETER     = 64;
 
 // 2 of 3: Add string description
-string QETWEAK_S_AXE_100_DAMAGE  = "1: Axe does 100 damage\n";
+string QETWEAK_S_GGMOD           = "1: GGMod weapon adjustments enabled\n";
 string QETWEAK_S_MAP_START_OPEN  = "2: start map stairs open\n";
 string QETWEAK_S_MAP_DM1_UPGRADE = "4: dm1 map weapons upgraded\n";
 string QETWEAK_S_DOUBLE_JUMP     = "8: Double-jump\n";
@@ -30,9 +30,9 @@ void() QETweaksWelcome = {
         "Have fun!");
 
     sprint(self, "Enabled tweaks:\n");
-    if (qetweaks & QETWEAK_AXE_100_DAMAGE)
+    if (qetweaks & QETWEAK_GGMOD)
     {
-        sprint(self, QETWEAK_S_AXE_100_DAMAGE);
+        sprint(self, QETWEAK_S_GGMOD);
     }
     if (qetweaks & QETWEAK_MAP_START_OPEN)
     {

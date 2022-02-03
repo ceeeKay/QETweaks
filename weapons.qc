@@ -51,9 +51,9 @@ void() W_FireAxe =
 	{
 		trace_ent.axhitme = 1;
 		SpawnBlood (org, '0 0 0', 20);
-		if(qetweaks & QETWEAK_AXE_100_DAMAGE)
+		if(qetweaks & QETWEAK_GGMOD)
 		{
-			T_Damage (trace_ent, self, self, 100);
+			T_Damage (trace_ent, self, self, 125);
 		}
 		else
 		{
@@ -303,7 +303,14 @@ void() W_FireSuperShotgun =
 
 	self.currentammo = self.ammo_shells = self.ammo_shells - 2;
 	dir = aim (self, 100000);
-	FireBullets (14, dir, '0.14 0.08 0');
+	if(qetweaks & QETWEAK_GGMOD)
+	{
+		FireBullets (40, dir, '0.14 0.14 0');
+	}
+	else
+	{
+		FireBullets (14, dir, '0.14 0.08 0');
+	}
 };
 
 
@@ -627,7 +634,14 @@ void(vector org, vector dir) launch_spike =
 	setsize (newmis, VEC_ORIGIN, VEC_ORIGIN);
 	setorigin (newmis, org);
 
-	newmis.velocity = dir * 1000;
+	if(qetweaks & QETWEAK_GGMOD)
+	{
+		newmis.velocity = dir * 2750;
+	}
+	else
+	{
+		newmis.velocity = dir * 1000;
+	}
 };
 
 void() W_FireSuperSpikes =
@@ -637,7 +651,14 @@ void() W_FireSuperSpikes =
 	sound (self, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);
 	self.attack_finished = time + 0.2;
 	self.currentammo = self.ammo_nails = self.ammo_nails - 2;
-	dir = aim (self, 1000);
+	if(qetweaks & QETWEAK_GGMOD)
+	{
+		dir = aim (self, 2750);
+	}
+	else
+	{
+		dir = aim (self, 1000);
+	}
 	launch_spike (self.origin + '0 0 16', dir);
 	newmis.touch = superspike_touch;
 	setmodel (newmis, "progs/s_spike.mdl");
@@ -667,7 +688,14 @@ void(float ox) W_FireSpikes =
 	sound (self, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	self.attack_finished = time + 0.2;
 	self.currentammo = self.ammo_nails = self.ammo_nails - 1;
-	dir = aim (self, 1000);
+	if(qetweaks & QETWEAK_GGMOD)
+	{
+		dir = aim (self, 2750);
+	}
+	else
+	{
+		dir = aim (self, 1000);
+	}
 	launch_spike (self.origin + '0 0 16' + v_right*ox, dir);
 
 	self.punchangle_x = -2;
@@ -928,7 +956,14 @@ void() W_Attack =
 	{
 		player_shot1 ();
 		W_FireSuperShotgun ();
-		self.attack_finished = time + 0.7;
+		if(qetweaks & QETWEAK_GGMOD)
+		{
+			self.attack_finished = time + 1.2;
+		}
+		else
+		{
+			self.attack_finished = time + 0.7;
+		}
 	}
 	else if (self.weapon == IT_NAILGUN)
 	{

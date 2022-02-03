@@ -2,6 +2,8 @@
 
 A collection of "tweaks" (small mods) for Quake Enhanced multiplayer servers.
 
+Several of these are not my own mods, see Credits/Acknowledgements below!
+
 ## Enabling tweaks
 
 Set `saved1` console variable to desired value before starting a server.
@@ -11,9 +13,11 @@ If you want to change the value, restart the map.
 
 You can activate multiple tweaks by adding the values together (eg 1 + 2 = 3).
 
-### 1: Axe does 100 damage
+### 1: GGMod weapon adjustments enabled
 
-Just like it sounds. The axe does 100 damage.
+* Axe does 125 damage
+* Nail travel speed is increased 2.75x (damage and rate of fire are unchanged)
+* Super shotgun fires ~3x pellets but has ~2x reload time (think Doom 2 SSG)
 
 ### 2: Map `start` (Introduction) floor open
 
@@ -54,6 +58,7 @@ Thanks to:
 * Dan The Man for the `start` map door code.
 * teamred for the double-jump mod.
 * Dave "Zoid" Kirsch and "Mike" for grappling hook/morning star.
+* Kilomile for the inspired GGmod weapon adjustments.
 * All the great folks in the
   [QE community Discord](https://discord.qethings.xyz/)
 
