@@ -50,6 +50,10 @@ Note that this conflicts with drawing speedometer.
 Print a speedometer. Set `scr_usekfont 0` for best-looking version.
 Note that this conflicts with drawing Player HUD.
 
+### 128: Gun kick disabled
+
+Disable gun kick (often preferred for competitive play).
+
 ## Credits/Acknowledgements
 
 Thanks to:
@@ -59,6 +63,7 @@ Thanks to:
 * teamred for the double-jump mod.
 * Dave "Zoid" Kirsch and "Mike" for grappling hook/morning star.
 * Kilomile for the inspired GGmod weapon adjustments.
+* R00k for the gun kick disable help.
 * All the great folks in the
   [QE community Discord](https://discord.qethings.xyz/)
 

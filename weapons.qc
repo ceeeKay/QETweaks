@@ -274,7 +274,10 @@ void() W_FireShotgun =
 
 	sound (self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);
 
-	self.punchangle_x = -2;
+	if (!(qetweaks & QETWEAK_NO_GUN_KICK))
+	{
+		self.punchangle_x = -2;
+	}
 
 	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
 	dir = aim (self, 100000);
@@ -299,7 +302,10 @@ void() W_FireSuperShotgun =
 
 	sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);
 
-	self.punchangle_x = -4;
+	if (!(qetweaks & QETWEAK_NO_GUN_KICK))
+	{
+		self.punchangle_x = -4;
+	}
 
 	self.currentammo = self.ammo_shells = self.ammo_shells - 2;
 	dir = aim (self, 100000);
@@ -392,7 +398,10 @@ void() W_FireRocket =
 
 	sound (self, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
 
-	self.punchangle_x = -2;
+	if (!(qetweaks & QETWEAK_NO_GUN_KICK))
+	{
+		self.punchangle_x = -2;
+	}
 
 	missile = spawn ();
 	missile.owner = self;
@@ -502,7 +511,11 @@ void() W_FireLightning =
 		sound (self, CHAN_WEAPON, "weapons/lhit.wav", 1, ATTN_NORM);
 		self.t_width = time + 0.6;
 	}
-	self.punchangle_x = -2;
+
+	if (!(qetweaks & QETWEAK_NO_GUN_KICK))
+	{
+		self.punchangle_x = -2;
+	}
 
 	self.currentammo = self.ammo_cells = self.ammo_cells - 1;
 
@@ -567,7 +580,10 @@ void() W_FireGrenade =
 
 	sound (self, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
 
-	self.punchangle_x = -2;
+	if (!(qetweaks & QETWEAK_NO_GUN_KICK))
+	{
+		self.punchangle_x = -2;
+	}
 
 	missile = spawn ();
 	missile.owner = self;
@@ -663,7 +679,10 @@ void() W_FireSuperSpikes =
 	newmis.touch = superspike_touch;
 	setmodel (newmis, "progs/s_spike.mdl");
 	setsize (newmis, VEC_ORIGIN, VEC_ORIGIN);
-	self.punchangle_x = -2;
+	if (!(qetweaks & QETWEAK_NO_GUN_KICK))
+	{
+		self.punchangle_x = -2;
+	}
 };
 
 void(float ox) W_FireSpikes =
@@ -698,7 +717,10 @@ void(float ox) W_FireSpikes =
 	}
 	launch_spike (self.origin + '0 0 16' + v_right*ox, dir);
 
-	self.punchangle_x = -2;
+	if (!(qetweaks & QETWEAK_NO_GUN_KICK))
+	{
+		self.punchangle_x = -2;
+	}
 };
 
 

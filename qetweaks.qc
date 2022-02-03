@@ -9,6 +9,7 @@ float QETWEAK_DOUBLE_JUMP     = 8;
 float QETWEAK_GRAPPLING_HOOK  = 16;
 float QETWEAK_PLAYER_HUD      = 32;
 float QETWEAK_SPEEDOMETER     = 64;
+float QETWEAK_NO_GUN_KICK     = 128;
 
 // 2 of 3: Add string description
 string QETWEAK_S_GGMOD           = "1: GGMod weapon adjustments enabled\n";
@@ -18,6 +19,7 @@ string QETWEAK_S_DOUBLE_JUMP     = "8: Double-jump\n";
 string QETWEAK_S_GRAPPLING_HOOK  = "16: Grappling hook\n";
 string QETWEAK_S_PLAYER_HUD      = "32: Player HUD with game timer, score, and ammo counts\n";
 string QETWEAK_S_SPEEDOMETER     = "64: Speedometer\n";
+string QETWEAK_S_NO_GUN_KICK     = "128: No gun kick\n";
 
 // 3 of 3: Add to welcome message
 void() QETweaksWelcome = {
@@ -72,6 +74,10 @@ void() QETweaksWelcome = {
                 sprint(self, "  Recommend setting scr_usekfont 0\n");
             }
         }
+    }
+    if (qetweaks & QETWEAK_NO_GUN_KICK)
+    {
+        sprint(self, QETWEAK_S_NO_GUN_KICK);
     }
 }
 
